@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skyline AI | Precision Dashboard</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Glass card (light) */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        /* Inputs */
+        .input-style {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Buttons */
+        .gradient-btn {
+            background: linear-gradient(to right, #2563eb, #4f46e5);
+            transition: 0.3s ease;
+        }
+        .gradient-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+        }
+
+        /* Recommendation cards */
+        .rec-card {
+            transition: 0.35s ease;
+        }
+        .rec-card:hover {
+            transform: translateY(-8px);
+            border-color: #2563eb;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+<!-- NAVBAR -->
+<header class="sticky top-0 z-50 glass border-b px-8 py-4 flex justify-between items-center">
+    <h2 class="text-2xl font-black tracking-tight text-blue-600">
+        SKYLINE <span class="text-slate-900">AI</span>
+    </h2>
+    <div class="flex items-center gap-6 text-sm font-semibold">
+        <span class="text-slate-500">
+            Agent: <span class="text-slate-900">{{ session['user'] }}</span>
+        </span>
+        <a href="/logout" class="text-red-500 hover:text-red-600 flex items-center gap-2">
+            <i class="fa-solid fa-power-off"></i> Logout
+        </a>
+    </div>
+</header>
+
+<!-- MAIN -->
+<div class="max-w-7xl mx-auto py-20 px-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+        <!-- LEFT : FORM -->
+        <div class="lg:col-span-8 glass p-10 rounded-[2.5rem]">
+
+            <div class="flex items-center gap-4 mb-10">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <i class="fa-solid fa-microchip text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black">10-Point Analysis Engine</h3>
+                    <p class="text-sm text-slate-500">
+                        AI-driven Ahmedabad real estate valuation
+                    </p>
+                </div>
+            </div>
+
+            <form id="predictForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="md:col-span-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">
+                        Micro-Market Sector
+                    </label>
+                    <select name="location" id="location"
+                            class="w-full p-4 rounded-xl input-style font-semibold">
+                        {% for l in locations %}
+                        <option value="{{l}}">{{ l|title }} Corridor</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Total Area (Sqft)</label>
+                    <input type="number" name="sqft" required
+                           class="w-full p-4 rounded-xl input-style">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">BHK</label>
+                    <input type="number" name="bhk" value="2"
+                           class="w-full p-4 rounded-xl input-style">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Bathrooms</label>
+                    <input type="number" name="bath" value="2"
+                           class="w-full p-4 rounded-xl input-style">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Property Age (Years)</label>
+                    <input type="number" name="age" value="5"
+                           class="w-full p-4 rounded-xl input-style">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Floor Level</label>
+                    <input type="number" name="floor" value="3"
+                           class="w-full p-4 rounded-xl input-style">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Total Floors</label>
+                    <input type="number" name="total_floors" value="10"
+                           class="w-full p-4 rounded-xl input-style">
+                </div>
+
+                <div class="md:col-span-2 flex flex-wrap gap-6 pt-4 border-t">
+                    <label class="flex items-center gap-2 text-slate-600">
+                        <input type="checkbox" name="parking" class="accent-blue-600"> Parking
+                    </label>
+                    <label class="flex items-center gap-2 text-slate-600">
+                        <input type="checkbox" name="lift" class="accent-emerald-600"> Lift
+                    </label>
+                    <label class="flex items-center gap-2 text-slate-600">
+                        <input type="checkbox" name="pool" class="accent-purple-600"> Pool
+                    </label>
+                </div>
+
+                <button type="button" onclick="runAnalysis()" id="predictBtn"
+                        class="md:col-span-2 gradient-btn p-6 rounded-2xl font-black text-white text-xl">
+                    START VALUATION
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT : RESULT -->
+        <div class="lg:col-span-4 space-y-6">
+            <div id="resultBox" class="glass p-10 rounded-[2.5rem] text-center hidden">
+                <p class="text-slate-400 font-black uppercase text-xs tracking-widest mb-4">
+                    Estimated Fair Value
+                </p>
+                <h2 id="priceText" class="text-6xl font-black text-emerald-600">₹ 0 L</h2>
+            </div>
+
+            <div class="glass p-8 rounded-[2.5rem]">
+                <h4 class="text-blue-600 font-black uppercase text-xs mb-4">
+                    Market Insight
+                </h4>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    Valuation reflects corridor-level appreciation and infrastructure-driven growth trends.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div id="recContainer" class="mt-20 hidden">
+        <h3 class="text-3xl font-black mb-10 text-slate-900">
+            Neural <span class="text-blue-600">Matches</span>
+        </h3>
+
+        <div id="recGrid"
+             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8"></div>
+    </div>
+</div>
+
+<!-- JS SAME -->
+<script>
+async function runAnalysis() {
+    const btn = document.getElementById("predictBtn");
+    const resultBox = document.getElementById("resultBox");
+    const recContainer = document.getElementById("recContainer");
+    const formData = new FormData(document.getElementById("predictForm"));
+
+    btn.disabled = true;
+    btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin mr-2'></i> ANALYZING...";
+
+    try {
+        const res = await fetch("/predict", { method: "POST", body: formData });
+        const data = await res.json();
+
+        const price = data.estimated_price_lakhs;
+        document.getElementById("priceText").innerText = `₹ ${price} L`;
+        resultBox.classList.remove("hidden");
+
+        const loc = document.getElementById("location").value;
+        const recRes = await fetch(`/recommend?location=${loc}&price=${price}`);
+        const recData = await recRes.json();
+
+        recContainer.classList.remove("hidden");
+        const grid = document.getElementById("recGrid");
+
+        grid.innerHTML = recData.length === 0
+            ? `<p class="col-span-full text-center text-slate-400 font-bold">No matches found</p>`
+            : recData.map((p, i) => `
+                <div class="glass rec-card p-6 rounded-2xl">
+                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=600&q=80&sig=${i}"
+                         class="rounded-xl mb-4 h-36 w-full object-cover">
+                    <h4 class="font-black text-sm truncate">${p.projectName || 'Luxury Asset'}</h4>
+                    <div class="text-xl font-black text-emerald-600 mt-2">₹ ${p.price_lakhs} L</div>
+                    <p class="text-xs text-slate-500 mt-2">${p.bhk} BHK • ${p.total_sqft} Sqft</p>
+                </div>
+            `).join("");
+
+    } catch {
+        alert("Server error. Please ensure backend is running.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = "START VALUATION";
+    }
+}
+</script>
+
+</body>
+</html>

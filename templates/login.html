@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Skyline Ahmedabad AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
+            color: #0f172a; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.08);
+        }
+
+        .input-focus:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-logo {
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-logo:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body class="p-6">
+
+    <nav class="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center bg-white/70 backdrop-blur-md border-b border-slate-100">
+        <a href="/" class="text-2xl font-black text-blue-600 tracking-tighter nav-logo">SKYLINE <span class="text-slate-900">INVEST</span></a>
+        <a href="/" class="text-sm font-bold text-slate-500 hover:text-blue-600 transition-all uppercase tracking-widest">Back to Portal</a>
+    </nav>
+
+    <div class="w-full max-w-md mt-16">
+        <div class="glass-card p-10 md:p-12 rounded-[3.5rem] relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
+            
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 rounded-3xl mb-6">
+                    <i class="fa-solid fa-shield-halved text-3xl text-blue-600"></i>
+                </div>
+                <h2 class="text-4xl font-black text-slate-900 mb-3 tracking-tight">Investor Access</h2>
+                <p class="text-slate-500 font-medium">Log in to manage your property portfolio</p>
+            </div>
+
+            <form action="/login" method="POST" onsubmit="return handleLogin()" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-1">Identity Tag</label>
+                    <div class="input-focus flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-5 transition-all">
+                        <i class="fa-solid fa-user-ninja text-slate-400 mr-4"></i>
+                        <input type="text" name="username" id="username" placeholder="Hasya_Patel" required
+                            class="w-full py-4 bg-transparent outline-none font-semibold text-slate-900 placeholder:text-slate-300">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-1">Access Key</label>
+                    <div class="input-focus flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-5 transition-all">
+                        <i class="fa-solid fa-key text-slate-400 mr-4"></i>
+                        <input type="password" name="password" id="password" placeholder="••••••••" required
+                            class="w-full py-4 bg-transparent outline-none font-semibold text-slate-900 placeholder:text-slate-300">
+                    </div>
+                </div>
+
+                <button type="submit" id="loginBtn" 
+                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200 hover:scale-[1.02] transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+                    AUTHORIZE ACCESS <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </form>
+
+            <div class="mt-10 pt-8 border-t border-slate-100 flex flex-col items-center gap-4">
+                <a href="#" class="text-sm font-bold text-blue-600 hover:text-indigo-700 transition-colors">Forgot Access Key?</a>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Skyline Neural Systems © 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const btn = document.getElementById("loginBtn");
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> VERIFYING...`;
+            btn.style.opacity = "0.8";
+            btn.style.pointerEvents = "none";
+            return true;
+        }
+
+        // Simple entrance animation
+        gsap.from(".glass-card", {
+            duration: 1.2,
+            y: 30,
+            opacity: 0,
+            ease: "power3.out"
+        });
+    </script>
+</body>
+</html>

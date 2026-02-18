@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Discovery Hub | Ahmedabad Skyline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <style>
+        :root { --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.1); --neon: #38bdf8; }
+        body { background: #020617; color: #f1f5f9; min-height: 100vh; font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .header h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(to right, #38bdf8, #22c55e); -webkit-background-clip: text; color: transparent; }
+        .back-btn { color: #94a3b8; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .back-btn:hover { color: var(--neon); }
+
+        .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
+        
+        /* 3D Interactive Card */
+        .card { background: var(--glass); border-radius: 28px; border: 1px solid var(--border); overflow: hidden; backdrop-filter: blur(15px); transition: transform 0.1s ease-out, border-color 0.3s; transform-style: preserve-3d; perspective: 1000px; }
+        .card:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(56, 189, 248, 0.15); }
+
+        .card-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .card-body { padding: 25px; transform: translateZ(20px); }
+        .price { font-size: 1.8rem; font-weight: 800; color: #22c55e; margin-bottom: 8px; }
+        .project-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; color: #f8fafc; }
+        .meta { display: flex; gap: 15px; color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; }
+        .tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.1); color: var(--neon); padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+
+        .empty-state { text-align: center; padding: 100px 0; grid-column: 1/-1; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1><i class="fa-solid fa-wand-magic-sparkles"></i> AI Discovery Hub</h1>
+    <a href="/dashboard" class="back-btn">← Back to Neural Dashboard</a>
+</div>
+
+<div class="rec-grid" id="recGrid">
+    <div class="empty-state"><i class="fas fa-spinner fa-spin fa-3x mb-4" style="color: var(--neon);"></i><p>Scanning Ahmedabad Micro-Markets...</p></div>
+</div>
+
+<script>
+    async function loadRecommendations() {
+        const params = new URLSearchParams(window.location.search);
+        const loc = params.get('location') || '';
+        const bhk = params.get('bhk') || 2;
+        const grid = document.getElementById("recGrid");
+
+        try {
+            const res = await fetch(`/recommend?location=${loc}&bhk=${bhk}`);
+            const data = await res.json();
+            
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="empty-state"><p>No neural matches found for this sector. Try a nearby location.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = data.map((p, i) => `
+                <div class="card" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                    <img src="https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=600&q=80&sig=${i}" class="card-img">
+                    <div class="card-body">
+                        <div class="price">₹ ${p.price_lakhs} L</div>
+                        <div class="project-name">${p.projectName || 'Luxury Residence'}</div>
+                        <div class="meta">
+                            <span><i class="fa-solid fa-maximize"></i> ${p.total_sqft} sqft</span>
+                            <span><i class="fa-solid fa-bed"></i> ${p.bhk} BHK</span>
+                        </div>
+                        <div class="tag"><i class="fa-solid fa-star"></i> AI TOP MATCH</div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (err) {
+            grid.innerHTML = `<div class="empty-state"><p style="color: #ef4444;">Connection error to Neural Core.</p></div>`;
+        }
+    }
+
+    function handleTilt(e, card) {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width/2) / 15;
+        const y = (rect.height/2 - (e.clientY - rect.top)) / 15;
+        card.style.transform = `perspective(1000px) rotateX(${y}deg) rotateY(${x}deg) scale3d(1.02, 1.02, 1.02)`;
+    }
+
+    function resetTilt(card) {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    }
+
+    window.onload = loadRecommendations;
+</script>
+</body>
+</html>
